@@ -1,0 +1,82 @@
+@using TKA.Posts.Services
+@using TKA.Posts.Models
+
+
+@namespace TKA.Posts
+@inherits ModuleBase
+@inject IPostsService PostsService
+@inject NavigationManager NavigationManager
+
+@if (_Postss == null)
+{
+    <button class="btn btn-primary" disabled>
+        <span class="spinner-border spinner-border-sm"></span>
+        Loading..
+    </button>
+}
+else
+{
+
+<ActionLink Action="MyPosts" class="btn btn-success float-right" Text="View My Posts"/>
+    <br />
+    <br />
+    @if (@_Postss.Count != 0)
+    {
+       <div class="card yowanu">
+               @foreach(var k in _Postss) { 
+           <div class="card-body">
+               <h5 class="card-title">@k.Title</h5><br/>
+               <p class="card-title">@k.CreatedOn</p>
+               <p>
+                   <div class="card-text truncate">@k.Description</div><ActionLink Action="Details" Text="Read more" Parameters="@($"id=" + k.PostsId.ToString())" />
+               </p>
+           </div>
+               }
+        </div>
+    }
+    else
+    {
+        <p>There are no posts available</p>
+    }
+}
+
+
+
+@code {
+    public override List<Resource> Resources => new List<Resource>()
+{
+        new Resource { ResourceType = ResourceType.Stylesheet, Url = ModulePath() + "Module.css" },
+        new Resource { ResourceType = ResourceType.Script, Url = ModulePath() + "Module.js" }
+    };
+
+    List<Posts> _Postss;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _Postss = await PostsService.GetPostssAsync(ModuleState.ModuleId);
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Posts {Error}", ex.Message);
+            AddModuleMessage("Error Loading Posts", MessageType.Error);
+        }
+    }
+
+    private async Task Delete(Posts Posts)
+    {
+        try
+        {
+            await PostsService.DeletePostsAsync(Posts.PostsId, ModuleState.ModuleId);
+            await logger.LogInformation("Posts Deleted {Posts}", Posts);
+            _Postss = await PostsService.GetPostssAsync(ModuleState.ModuleId);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Deleting Posts {Posts} {Error}", Posts, ex.Message);
+            AddModuleMessage("Error Deleting Posts", MessageType.Error);
+        }
+    }
+}

@@ -1,0 +1,45 @@
+/* Module Custom Styles */
+
+/*.truncate {
+    --max-lines: 3;
+    display: inline-block;
+    width: 90%;
+    height: 5%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+    .truncate + a {
+        display: inline-block;
+        vertical-align: top;
+        margin-top: -1px;
+    }*/
+/*Index -  for section that shows brief title, date created and description of the post*/
+.truncate {
+    font-size: 15px;
+    width: 100%;
+    /**Major Properties**/
+    overflow: hidden;
+    line-height: 1.5rem;
+    max-height: 8rem;
+    -webkit-box-orient: vertical;
+    display: block;
+    display: -webkit-box;
+    overflow: hidden !important;
+    -webkit-line-clamp: 3;
+}
+/*Details -  for comment box */
+.pb-cmnt-comment {
+    border:solid blue;
+    width:60%;
+    font-family: Lato;
+    margin-top: 100px;
+}
+.pb-cmnt-textarea {
+    resize: none;
+    padding: 20px;
+    height: 100px;
+    width: 50%;
+    border: 1px solid #F2F2F2;
+}
